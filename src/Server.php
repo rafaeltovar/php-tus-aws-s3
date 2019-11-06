@@ -1,12 +1,11 @@
 <?php
 namespace TusPhpS3;
 
-use Aws\S3\S3Client;
-
 use TusPhp\Tus\Server as TusServer,
     TusPhp\Cache\AbstractCache,
     TusPhp\Middleware\Middleware;
 
+use Aws\S3\S3Client;
 use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 class Server
@@ -18,12 +17,12 @@ extends TusServer
     public function __construct(
         AbstractCache $cache,
         AwsS3Adapter $storage,
-        UploadHttpRequest $request,
+        Http\Request $request,
         $excludeAttrApiPath = [],
         $forceLocationSSL = true)
     {
         $this->request = $request;
-        $this->response   = new UploadHttpResponse;
+        $this->response   = new Http\Response;
         $this->middleware = new Middleware;
 
         //$s3->registerStreamWrapper();

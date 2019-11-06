@@ -1,10 +1,10 @@
 <?php
 namespace TusPhpS3\Http;
 
-use TusPhp\Response;
+use TusPhp\Response as TusResponse;
 
-class UploadHttpResponse
-extends Response
+class Response
+extends TusResponse
 {
     public function __construct()
     {

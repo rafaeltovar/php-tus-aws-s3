@@ -1,5 +1,5 @@
 <?php
-namespace Twona\Core\Http\Upload\Cache;
+namespace TusPhpS3\Cache;
 
 use TusPhp\Cache\RedisStore;
 
