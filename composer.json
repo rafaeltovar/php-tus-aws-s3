@@ -21,7 +21,6 @@
         "psr/container": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "ankitpokhrel/tus-php": "^1.0",
-        "vlucas/phpdotenv": "^3.6",
         "aws/aws-sdk-php": "^3.112",
         "guzzlehttp/guzzle": "^6.4",
         "symfony/http-foundation": "^4.3"
