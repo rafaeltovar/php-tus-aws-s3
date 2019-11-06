@@ -1,0 +1,132 @@
+<?php
+namespace Twona\Core\Http\Upload\Storage;
+
+use Twona\Core\Files\Uploaded,
+    Twona\Core\Files\FileContent;
+
+use Psr\Log\LoggerInterface;
+
+use Predis\Client as Predis,
+    League\Flysystem\AwsS3v3\AwsS3Adapter;
+
+class S3ChunkStorage
+{
+    const UPLOAD_KEY = "uploads/";
+    const UPLOAD_EXPIRE = 86400; // 1 day
+    const UPLOAD_MIN_SIZE = 5242880;
+
+    protected $s3Adapter;
+    protected $redis;
+    protected $logger;
+
+    public function __construct(AwsS3Adapter $s3Adapter, Predis $redis, LoggerInterface $logger)
+    {
+        $this->s3Adapter = $s3Adapter;
+        $this->redis = $redis;
+        $this->logger = $logger;
+    }
+
+    protected function getAdapter() : AwsS3Adapter
+    {
+        return $this->s3Adapter;
+    }
+
+    protected function getRedis() : Predis
+    {
+        return $this->redis;
+    }
+
+
+
+    public function create(string $key)
+    {
+        if($this->getS3()->has($key))
+            $this->getS3()->delete($key);
+
+        $s3 = $this->getS3()->getClient();
+        $result = $s3->createMultipartUpload([
+            'Bucket'       => $this->getS3()->getBucket(),
+            'Key'          => $this->getS3()->applyPathPrefix($key),
+            'StorageClass' => 'REDUCED_REDUNDANCY',
+            'Metadata'     => []
+        ]);
+
+        $this->setData($key, $result['UploadId']);
+    }
+
+    public function setChunk(string $key, int $part, string $filename)
+    {
+        $data = $this->getData($key);
+        $uploadId = $data['UploadId'];
+
+        $filesize = filesize($filename);
+
+        $stream = fopen($filename, 'r');
+        $result = $this->getS3()->getClient()->uploadPart([
+            'Bucket'       => $this->getS3()->getBucket(),
+            'Key'          => $this->getS3()->applyPathPrefix($key),
+            'UploadId'     => $uploadId,
+            'PartNumber'   => $part,
+            'Body'         => fread($stream, $filesize),
+        ]);
+        fclose($stream);
+
+        $this->setData($key, null, $part, $result['ETag']);
+    }
+
+    public function complete($key)
+    {
+        $data = $this->getData($key);
+
+        $uploadId = $data['UploadId'];
+        $parts = $data['Parts'];
+
+        $result = $this->getS3()->getClient()->completeMultipartUpload([
+            'Bucket'        => $this->getS3()->getBucket(),
+            'Key'           => $this->getS3()->applyPathPrefix($key),
+            'UploadId'      => $uploadId,
+            'MultipartUpload'    => ['Parts' => $parts],
+        ]);
+    }
+
+    protected function setData(string $key, string $uploadId = null, int $part = 0, string $ETag = null)
+    {
+        $data = $this->getData($key);
+
+        if(isset($uploadId) && $part == 0) {
+            $data = $this->_dataValue();
+            $data['UploadId'] = $uploadId;
+        }
+
+        if($part > 0)
+        {
+            $data['Parts'][$part] = [
+                'PartNumber' => $part,
+                'ETag' => $ETag,
+            ];
+        }
+
+        $this->getRedis()->setex($this->_dataKey($key), self::UPLOAD_EXPIRE, serialize($data));
+    }
+
+    protected function getData($key)
+    {
+        $this->getRedis()->expire($this->_dataKey($key), self::UPLOAD_EXPIRE);
+        $value = $this->getRedis()->get($this->_dataKey($key));
+        return isset($value)? unserialize($value): $this->_dataValue();
+    }
+
+    protected function _dataValue()
+    {
+        return [
+            'UploadId' => null,
+            'Parts' => []
+        ];
+    }
+
+    protected function _dataKey($key)
+    {
+        return sprintf("%s-data", $key);
+    }
+
+}

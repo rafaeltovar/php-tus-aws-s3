@@ -1,0 +1,28 @@
+{
+    "name": "rafaeltovar/php-tus-aws-s3",
+    "description": "Simple, light, minimum TUS server connected with AWS S3. Based on https://github.com/ankitpokhrel/tus-php",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.0",
+        "psr/container": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TusPhpS3\\": "src"
+        }
+    },
+    "homepage": "https://github.com/rafaeltovar/php-tus-aws-s3",
+    "authors": [
+        {
+            "name": "Rafael Tovar",
+            "email": "hola@rafaeltovar.info",
+            "homepage": "https://code.rafaeltovar.info/"
+
+        }
+    ],
+    "require": {
+        "ankitpokhrel/tus-php": "^1.0",
+        "vlucas/phpdotenv": "^3.6",
+        "aws/aws-sdk-php": "^3.112"
+    }
+}
