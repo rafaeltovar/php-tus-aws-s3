@@ -17,7 +17,7 @@ extends TusClient
     public function setHttpClient(GuzzleClient $client) : self
     {
         $defaultHeaders = $this->client->getOptions('headers');
-        $options = $this->getOptions();
+        $options = $client->getOptions();
         $options['headers'] = $defaultHeaders + ($options ?? []);
 
         $this->client = new GuzzleClient($options);
