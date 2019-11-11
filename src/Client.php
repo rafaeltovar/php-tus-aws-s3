@@ -18,7 +18,7 @@ extends TusClient
     {
         $defaultHeaders = $this->client->getOptions('headers');
         $options = $client->getOptions();
-        $options['headers'] = $defaultHeaders + ($options ?? []);
+        $options['headers'] = $defaultHeaders + ($options['headers'] ?? []);
 
         $this->client = new GuzzleClient($options);
 
