@@ -64,8 +64,8 @@ extends File
                 $bytes += $this->write($output, $data, self::CHUNK_SIZE);
             }
 
-            // check min multipart size
-            if($bytes < $totalBytes && $bytes < self::UPLOAD_MIN_SIZE)
+            // check min multipart size if is not last part
+            if($bytes + $this->offset < $totalBytes && $bytes < self::UPLOAD_MIN_SIZE)
                 throw new \Exception(sprintf("Your proposed upload is smaller than the minimum allowed size. (Proposal size: %s, MinSizeAllowed: %s).", $bytes, self::UPLOAD_MIN_SIZE));;
 
             // check what is next part
