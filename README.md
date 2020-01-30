@@ -7,7 +7,7 @@ Simple, light, minimum TUS server connected with AWS S3. Based on [ankitpokhrel/
 ### Composer
 
 ```
-composer require rafaeltovar/php-tus-aws-s3 league/flysystem
+composer require rafaeltovar/php-tus-aws-s3 predis/predis
 ```
 
 ## Features
@@ -50,7 +50,6 @@ extends TusServer
 | `$forceLocationSSL`   | `boolean` | Force `location` header property to `https`. |
 
 
-
 ### TUS Routes
 
 ```php
@@ -59,7 +58,7 @@ extends TusServer
  * or get server configuration
  **/
 $routes->add('uploads', '/api/uploads')
-        ->controller([UploaderController::class, 'upload'])
+        ->controller([UploadController::class, 'upload'])
         ->methods([POST, OPTIONS])
 
 /**
@@ -67,10 +66,48 @@ $routes->add('uploads', '/api/uploads')
  * or delete uploads
  **/
 $routes->add('uploads', '/api/uploads/{id}')
-        ->controller([UploaderController::class, 'upload'])
+        ->controller([UploadController::class, 'upload'])
         ->methods([PATCH, DELETE])
 ```
 
-### TUS Server init
+### Running TUS Server
 
-// TODO
+```php
+
+use TusPhpS3;
+
+use Aws\S3\S3Client;
+use League\Flysystem\AwsS3v3\AwsS3Adapter;
+
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
+
+class UploadController
+{
+    public function upload()
+    {
+
+        // redis connection
+        $predis = new Predis\Client('tcp://10.0.0.1:6379');
+
+
+        // AWS S3 Client
+        $S3client = new S3Client([
+            'credentials' => [
+                'key'    => 'your-key',
+                'secret' => 'your-secret',
+            ],
+            'region' => 'your-region',
+            'version' => 'latest|version',
+        ]);
+
+        $server = new TusPhpS3\Server(
+            new TusPhpS3\Cache\PredisCache($predis),
+            new AwsS3Adapter($S3client, 'your-bucket-name', 'optional/path/prefix'),
+            new TusPhpS3\Http\Request(HttpRequest::createFromGlobals()),
+            ['id'],
+            true
+        );
+
+        return $server->serve(); // return an TusPhpS3\Http\Response
+    }
+}
