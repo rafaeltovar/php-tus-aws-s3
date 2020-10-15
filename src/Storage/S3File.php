@@ -103,12 +103,22 @@ extends File
         if($this->getS3()->has($this->S3key($key)))
             $this->getS3()->delete($this->S3key($key));
 
-        $result = $this->getS3()->getClient()->createMultipartUpload([
-            'Bucket'       => $this->getS3()->getBucket(),
-            'Key'          => $this->getS3()->applyPathPrefix($this->S3key($key)),
-            'StorageClass' => 'REDUCED_REDUNDANCY',
-            'Metadata'     => []
-        ]);
+        $options = [];
+
+        $cache = $this->cache->get($key);
+        $mimetype = $cache['metadata']['filetype']?? false;
+
+        if($mimetype)
+            $options['ContentType'] = $mimetype;
+
+        $result = $this->getS3()->getClient()->createMultipartUpload(
+            [
+                'Bucket'       => $this->getS3()->getBucket(),
+                'Key'          => $this->getS3()->applyPathPrefix($this->S3key($key)),
+                'StorageClass' => 'REDUCED_REDUNDANCY',
+                'Metadata'     => []
+            ] + $options 
+        );
 
         $this->cache->set($key, ["key" => $key]);
         $this->setUploadId($key, $result['UploadId']);
