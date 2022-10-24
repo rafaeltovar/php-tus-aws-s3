@@ -23,6 +23,6 @@
         "ankitpokhrel/tus-php": "^1.0",
         "aws/aws-sdk-php": "^3.112",
         "guzzlehttp/guzzle": "^6.4",
-        "symfony/http-foundation": "^4.3"
+        "symfony/http-foundation": "^4.3 || ^5.4"
     }
 }
