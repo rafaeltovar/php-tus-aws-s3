@@ -9,7 +9,7 @@ If you are using Symfony, check the table below.
 | Symfony Version | php-tus-aws-s3 version |
 | --------------- | ---------------------- |
 | ^4.3            | ~1.0                   |
-| ^5.0  || ^6.0   | ~1.1                   |
+| ^5.0  or ^6.0   | ~1.1                   |
 
 ## Installation
 
