@@ -2,12 +2,21 @@
 
 Simple, light, minimum TUS server connected with AWS S3. Based on [ankitpokhrel/tus-php](https://github.com/ankitpokhrel/tus-php).
 
+
+## Versions
+If you are using Symfony, check the table below.
+
+| Symfony Version | php-tus-aws-s3 version |
+| --------------- | ---------------------- |
+| ^4.3            | ~1.0                   |
+| ^5.0  || ^6.0   | ~1.1                   |
+
 ## Installation
 
 ### Composer
 
 ```
-composer require rafaeltovar/php-tus-aws-s3 predis/predis
+composer require rafaeltovar/php-tus-aws-s3:~1.x predis/predis
 ```
 
 ## Features
