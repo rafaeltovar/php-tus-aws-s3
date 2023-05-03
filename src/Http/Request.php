@@ -11,4 +11,24 @@ extends TusRequest
     {
         $this->request = $request;
     }
+
+    /**
+     * Validate file name.
+     *
+     * @param string $filename
+     *
+     * @return bool
+     */
+    protected function isValidFilename(string $filename): bool
+    {
+        $forbidden = ['../', '"', "'", '/', '\\', ':'];
+
+        foreach ($forbidden as $char) {
+            if (false !== strpos($filename, $char)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
