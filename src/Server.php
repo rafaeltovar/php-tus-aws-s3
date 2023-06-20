@@ -1,28 +1,35 @@
 <?php
+
+declare(strict_types=1);
+
 namespace TusPhpS3;
 
+use TusPhpS3\Http\Request;
+use TusPhpS3\Http\Response;
+
+use TusPhpS3\Storage\AwsS3File;
+
 use TusPhp\Tus\Server as TusServer,
-    TusPhp\Cache\AbstractCache,
+    TusPhp\File,
+    // TusPhp\Cache\AbstractCache,
     TusPhp\Middleware\Middleware;
 
-use Aws\S3\S3Client;
-use League\Flysystem\AwsS3v3\AwsS3Adapter;
+use Aws\S3\S3ClientInterface;
+// use League\Flysystem\AwsS3v3\AwsS3Adapter;
 
 class Server
 extends TusServer
 {
-    protected $storage;
+    // protected $storage;
     protected $forceLocationSSL;
 
     public function __construct(
-        AbstractCache $cache,
-        AwsS3Adapter $storage,
-        Http\Request $request,
-        $excludeAttrApiPath = [],
-        $forceLocationSSL = true)
+        S3ClientInterface $client,
+        $excludeAttrApiPath = [], // to config
+        $forceLocationSSL = true) // to config
     {
-        $this->request = $request;
-        $this->response   = new Http\Response;
+        $this->request = new Request();
+        $this->response   = new Response;
         $this->middleware = new Middleware;
 
         //$s3->registerStreamWrapper();
@@ -48,15 +55,15 @@ extends TusServer
 
     }
 
-    public function setStorage(AwsS3Adapter $storage)
-    {
-        $this->storage = $storage;
-    }
+    // public function setStorage(AwsS3Adapter $storage)
+    // {
+    //     $this->storage = $storage;
+    // }
 
-    public function getStorage() : AwsS3Adapter
-    {
-        return $this->storage;
-    }
+    // public function getStorage() : AwsS3Adapter
+    // {
+    //     return $this->storage;
+    // }
 
     /**
      * Handle all HTTP request.
@@ -80,9 +87,9 @@ extends TusServer
      *
      * @return File
      */
-    protected function buildFile(array $meta) : \TusPhp\File
+    protected function buildFile(array $meta) : File
     {
-        $file = new Storage\S3File($this->getStorage(), $meta['name'], $this->cache);
+        $file = new AwsS3File($this->client, $meta['name']);
 
         if (array_key_exists('offset', $meta)) {
             $file->setMeta($meta['offset'], $meta['size'], $meta['file_path'], $meta['location']);
