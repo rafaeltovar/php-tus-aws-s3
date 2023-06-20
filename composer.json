@@ -17,12 +17,12 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=8.0",
         "psr/container": "^1.0",
-        "league/flysystem-aws-s3-v3": "^1.0",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "ankitpokhrel/tus-php": "^2.3",
         "aws/aws-sdk-php": "^3.112",
-        "guzzlehttp/guzzle": "^6.4",
+        "guzzlehttp/guzzle": "^7.0",
         "symfony/http-foundation": "^5.0 || ^6.0"
     }
 }
