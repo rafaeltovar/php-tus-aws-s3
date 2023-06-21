@@ -14,7 +14,7 @@ extends File
 {
     const BUCKET = 'AWS_S3_BUCKET';
     const PREFIX = 'AWS_S3_PREFIX';
-    const PUT_OPTIONS = 'AWS_S3_PUT_REQUEST_OPTIONS';
+    // const PUT_OPTIONS = 'AWS_S3_PUT_REQUEST_OPTIONS';
 
     // const PREFIX = "uploads";
 

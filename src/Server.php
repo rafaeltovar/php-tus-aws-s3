@@ -20,13 +20,15 @@ use Aws\S3\S3ClientInterface;
 class Server
 extends TusServer
 {
+    const FORCE_LOCATION_SSL = 'SERVER_FORCE_LOCATION_SSL';
+    const EXCLUDE_API_PATH = 'SERVER_EXCLUDE_API_PATH';
+
     // protected $storage;
     protected $forceLocationSSL;
 
     public function __construct(
-        S3ClientInterface $client,
-        $excludeAttrApiPath = [], // to config
-        $forceLocationSSL = true) // to config
+        S3ClientInterface $client
+    ) // to config
     {
         $this->request = new Request();
         $this->response   = new Response;
@@ -40,11 +42,11 @@ extends TusServer
         //$this->setUploadDir($uploadDir);
 
         // force ssl on location
-        $this->forceLocationSSL = $forceLocationSSL;
+        $this->forceLocationSSL = Config::get(self::FORCE_LOCATION_SSL);
 
         // set api path
         $apiPath = $request->getRequest()->getRequestUri();
-        foreach($excludeAttrApiPath as $exclude)
+        foreach(Config::get(self::EXCLUDE_API_PATH) as $exclude)
         {
             $apiPath = $request->getRequest()->attributes->has($exclude) ?
                        str_replace(sprintf("/%s", $request->getRequest()->attributes->get($exclude)), "", $request->getRequest()->getRequestUri()) :
