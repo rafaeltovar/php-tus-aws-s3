@@ -10,8 +10,8 @@ use TusPhp\Cache\AbstractCache;
 class AwsS3Cache
 extends AbstractCache
 {
-    const BUCKET = 'AWS_S3_CACHE_BUCKET';
-    const PREFIX = 'AWS_S3_CACHE_PREFIX';
+    const BUCKET = 'AWS_S3_BUCKET';
+    const PREFIX = 'AWS_S3_PREFIX';
     const PUT_OPTIONS = 'AWS_S3_CACHE_PUT_REQUEST_OPTIONS';
 
     private $prefix;
@@ -23,6 +23,7 @@ extends AbstractCache
      */
     public function __construct(private S3ClientInterface $client)
     {
+        $prefix = str_replace("//", "/", sprintf('%s%s', Config::GET(self::PREFIX), 'parts'));
         $this->setPrefix(Config::GET(self::PREFIX));
     }
 
