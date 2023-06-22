@@ -4,6 +4,7 @@ namespace TusPhpS3\Cache;
 use TusPhpS3\Config;
 
 use Aws\S3\S3ClientInterface;
+use Aws\S3\Exception\S3Exception;
 
 use TusPhp\Cache\AbstractCache;
 
@@ -66,9 +67,13 @@ extends AbstractCache
             'Bucket' => Config::get(self::BUCKET)
         ];
 
-        $result = $this->client->getObject(
-            $request
-        );
+        try {
+            $result = $this->client->getObject(
+                $request
+            );
+        } catch(S3Exception $e) {
+            return null;
+        }
 
         return $this->deserialize($result['Body']);
     }
