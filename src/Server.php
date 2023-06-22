@@ -8,6 +8,7 @@ use TusPhpS3\Http\Request;
 use TusPhpS3\Http\Response;
 
 use TusPhpS3\Storage\AwsS3File;
+use TusPhpS3\Cache\AwsS3Cache;
 
 use TusPhp\Tus\Server as TusServer,
     TusPhp\File,
@@ -38,10 +39,10 @@ extends TusServer
         $this->middleware = new Middleware;
 
 
-        //$s3->registerStreamWrapper();
+        // $s3->registerStreamWrapper();
         //$cache = $this->cache;
 
-        // $this->setCache($cache);
+        $this->setCache(new AwsS3Cache($client));
         // $this->setStorage($storage);
         //$this->setUploadDir($uploadDir);
 
