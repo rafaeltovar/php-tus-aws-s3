@@ -152,26 +152,26 @@ extends AbstractCache
         return array_map(fn($r) => $r['Key'], $result['Contents']);
     }
 
-    /**
-     * Set cache prefix.
-     *
-     * @param string $prefix
-     *
-     * @return self
-     */
-    public function setPrefix(string $prefix): self
-    {
-        $this->prefix = $prefix;
-    }
+    // /**
+    //  * Set cache prefix.
+    //  *
+    //  * @param string $prefix
+    //  *
+    //  * @return self
+    //  */
+    // public function setPrefix(string $prefix): self
+    // {
+    //     $this->prefix = $prefix;
+    // }
 
-    /**
-     * Get cache prefix.
-     *
-     * @return string
-     */
-    public function getPrefix(): string
-    {
-        return $this->prefix;
-    }
+    // /**
+    //  * Get cache prefix.
+    //  *
+    //  * @return string
+    //  */
+    // public function getPrefix(): string
+    // {
+    //     return $this->prefix;
+    // }
 
 }
