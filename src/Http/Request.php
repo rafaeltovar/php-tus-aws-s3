@@ -2,11 +2,16 @@
 namespace TusPhpS3\Http;
 
 use TusPhp\Request as TusRequest;
-// use Symfony\Component\HttpFoundation\Request as HttpRequest;
+use Symfony\Component\HttpFoundation\Request as HttpRequest;
 
 class Request
 extends TusRequest
 {
+
+    public function setRequest(HttpRequest $request)
+    {
+        $this->request = $request;
+    }
     /**
      * Validate file name.
      *
