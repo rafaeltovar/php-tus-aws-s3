@@ -99,7 +99,7 @@ extends TusServer
         $file = new AwsS3File($this->client, $meta['name']);
 
         if (array_key_exists('offset', $meta)) {
-            $file->setMeta($meta['offset'], $meta['size'], $meta['file_path'], $meta['location']);
+            $file->setMeta($meta['offset'], (int) $meta['size'], $meta['file_path'], $meta['location']);
         }
 
         return $file;
