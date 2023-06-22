@@ -96,7 +96,7 @@ extends TusServer
      */
     protected function buildFile(array $meta) : File
     {
-        $file = new AwsS3File($meta['name'], $this->getCache());
+        $file = new AwsS3File($this->client, $meta['name'], $this->getCache());
 
         if (array_key_exists('offset', $meta)) {
             $file->setMeta($meta['offset'], (int) $meta['size'], $meta['file_path'], $meta['location']);

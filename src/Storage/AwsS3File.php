@@ -36,17 +36,18 @@ extends File
      * @param string|null    $name
      * @param Cacheable|null $cache
      */
-    // public function __construct(
-    //     protected ?string $filename = null,
-    //     protected ?Cacheable $cache = null
-    // )
-    // {
-    //     $this->cache = new AwsS3Cache($this->client);
-    //     parent::__construct(
-    //         $filename,
-            
-    //     );
-    // }
+    public function __construct(
+        protected S3ClientInterface $client, 
+        ?string $filename = null,
+        ?Cacheable $cache = null
+    )
+    {
+        // $this->cache = new AwsS3Cache($this->client);
+        parent::__construct(
+            $filename,
+            $cache
+        );
+    }
 
     public function upload(int $totalBytes) : int
     {
