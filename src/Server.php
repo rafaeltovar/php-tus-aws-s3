@@ -25,31 +25,35 @@ extends TusServer
 
     // protected $storage;
     protected $forceLocationSSL;
+    protected $client;
 
     public function __construct(
         S3ClientInterface $client
-    ) // to config
+    )
     {
+        $this->client = $client;
+
         $this->request = new Request();
         $this->response   = new Response;
         $this->middleware = new Middleware;
 
+
         //$s3->registerStreamWrapper();
         //$cache = $this->cache;
 
-        $this->setCache($cache);
-        $this->setStorage($storage);
+        // $this->setCache($cache);
+        // $this->setStorage($storage);
         //$this->setUploadDir($uploadDir);
 
         // force ssl on location
         $this->forceLocationSSL = Config::get(self::FORCE_LOCATION_SSL);
 
         // set api path
-        $apiPath = $request->getRequest()->getRequestUri();
+        $apiPath = $this->request->getRequest()->getRequestUri();
         foreach(Config::get(self::EXCLUDE_API_PATH) as $exclude)
         {
-            $apiPath = $request->getRequest()->attributes->has($exclude) ?
-                       str_replace(sprintf("/%s", $request->getRequest()->attributes->get($exclude)), "", $request->getRequest()->getRequestUri()) :
+            $apiPath = $this->request->getRequest()->attributes->has($exclude) ?
+                       str_replace(sprintf("/%s", $this->request->getRequest()->attributes->get($exclude)), "", $this->request->getRequest()->getRequestUri()) :
                        $apiPath;
         }
 
