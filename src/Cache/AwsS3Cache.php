@@ -14,8 +14,6 @@ extends AbstractCache
     const PREFIX = 'AWS_S3_CACHE_PREFIX';
     const PUT_OPTIONS = 'AWS_S3_CACHE_PUT_REQUEST_OPTIONS';
 
-    private $prefix;
-
     /**
      * AwsS3Cache constructor.
      *
