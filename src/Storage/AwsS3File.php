@@ -105,7 +105,7 @@ extends File
     {
         $s3key = $this->S3key($key);
 
-        if($this->client->doesObjectExistV2($bucket, $s3key))
+        if($this->client->doesObjectExistV2(['Bucket' =>Config::get(self::BUCKET), 'Key' => $s3key ]))
             $this->client->deleteObject([
                 'Bucket' => Config::get(self::BUCKET),
                 'Key'    => $s3key
