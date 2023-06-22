@@ -2,6 +2,7 @@
 namespace TusPhpS3\Storage;
 
 use TusPhpS3\Cache\AwsS3Cache;
+use TusPhpS3\Config;
 
 use Aws\S3\S3ClientInterface;
 
