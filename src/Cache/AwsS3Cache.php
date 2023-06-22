@@ -11,7 +11,7 @@ class AwsS3Cache
 extends AbstractCache
 {
     const BUCKET = 'AWS_S3_BUCKET';
-    const PREFIX = 'AWS_S3_PREFIX';
+    const PREFIX = 'AWS_S3_CACHE_PREFIX';
     const PUT_OPTIONS = 'AWS_S3_CACHE_PUT_REQUEST_OPTIONS';
 
     private $prefix;
