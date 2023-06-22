@@ -34,7 +34,7 @@ extends TusServer
     {
         $this->client = $client;
 
-        $this->request = new Request();
+        $this->setRequest(new Request());
         $this->response   = new Response;
         $this->middleware = new Middleware;
 
@@ -49,6 +49,12 @@ extends TusServer
         // force ssl on location
         $this->forceLocationSSL = Config::get(self::FORCE_LOCATION_SSL);
 
+    }
+
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
+
         // set api path
         $apiPath = $this->request->getRequest()->getRequestUri();
         foreach(Config::get(self::EXCLUDE_API_PATH) as $exclude)
@@ -59,7 +65,6 @@ extends TusServer
         }
 
         $this->setApiPath($apiPath);
-
     }
 
     // public function setStorage(AwsS3Adapter $storage)
