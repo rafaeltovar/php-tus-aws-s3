@@ -89,7 +89,7 @@ extends AbstractCache
     public function set(string $key, $value)
     {
 
-        $contents = $this->get($key);
+        $contents = $this->get($key) ?? [];
 
         if (\is_array($value)) {
             $contents = $value + $contents;

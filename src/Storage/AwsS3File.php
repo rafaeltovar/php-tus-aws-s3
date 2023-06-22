@@ -214,7 +214,7 @@ extends File
 
     protected function S3key($key) : string
     {
-        return sprintf("%s/%s.%s", Config::get(self::PREFIX), $key, $this->getExtension());
+        return str_replace("//", "/", sprintf("%s/%s.%s", Config::get(self::PREFIX), $key, $this->getExtension()));
     }
 
     protected function getExtension() : string
