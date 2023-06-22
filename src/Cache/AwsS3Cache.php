@@ -88,14 +88,23 @@ extends AbstractCache
      */
     public function set(string $key, $value)
     {
-        $content = $this->serialize($value);
+
+        $contents = $this->get($key);
+
+        if (\is_array($value)) {
+            $contents = $value + $contents;
+        } else {
+            $contents[] = $value;
+        }
+
+        $contents = $this->serialize($contents);
 
         $request = Config::get(self::PUT_OPTIONS);
 
         $request = [...$request, ...[
             'Key' => $this->key($key),
             'Bucket' => Config::get(self::BUCKET),
-            'Body' => $content
+            'Body' => $contents
 
         ]];
 
