@@ -15,6 +15,8 @@ extends AbstractCache
     const PREFIX = 'AWS_S3_CACHE_PREFIX';
     const PUT_OPTIONS = 'AWS_S3_CACHE_PUT_REQUEST_OPTIONS';
 
+    private string $s3prefix;
+
     /**
      * AwsS3Cache constructor.
      *
@@ -23,7 +25,7 @@ extends AbstractCache
     public function __construct(private S3ClientInterface $client)
     {
         $prefix = str_replace("//", "/", sprintf('%s%s', Config::GET(self::PREFIX), 'parts'));
-        $this->setPrefix(Config::GET(self::PREFIX));
+        $this->s3prefix = Config::GET(self::PREFIX);
     }
 
     private function serialize($value) : string
@@ -49,7 +51,7 @@ extends AbstractCache
 
     private function key(string $key) : string
     {
-        return sprintf("%s%s", $this->getPrefix(), $key);
+        return str_replace("//", "/", sprintf("%s/%s%s", $this->s3prefix, $this->getPrefix(), $key));
     }
 
     /**
